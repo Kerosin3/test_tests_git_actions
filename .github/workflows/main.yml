@@ -27,7 +27,7 @@ jobs:
         python -m pip install flake8 pytest poetry
         poetry config virtualenvs.create false
         poetry update
-        flask db update
+        flask db upgrade
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
