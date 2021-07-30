@@ -34,7 +34,7 @@ jobs:
         docker ps -a
     - name: Flask upgrade
       run: |
-        ls -l
+        cd web_app
         flask db upgrade
     - name: Lint with flake8
       run: |
