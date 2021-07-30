@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  launch_postgres+run_app:
+  launch_all:
   
     runs-on: ubuntu-latest
     strategy:
