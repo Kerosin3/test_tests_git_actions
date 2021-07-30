@@ -26,15 +26,6 @@ jobs:
           - ./db_data/pg-data:/var/lib/postgresql/data
         ports: ['5432:5432']
 
-
- # run-dull-tests:
- #   needs: launch_postgres
-  #  runs-on: ubuntu-latest
-  #  strategy:
- #     fail-fast: false
-  #    matrix:
-  #      python-version: [ 3.9 ]
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -48,10 +39,6 @@ jobs:
           pip install docker-compose
           poetry config virtualenvs.create false
           poetry update
-      #    - name: Launch docker
-      #      run: |
-      #        docker-compose up -d database_local
-      #        docker ps -a
       - name: Flask upgrade
         run: |
           cd web_app
@@ -78,7 +65,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    needs: run-dull-tests
+    needs: launch_all
     runs-on: ubuntu-latest
     steps:
       - name: Send webhook
