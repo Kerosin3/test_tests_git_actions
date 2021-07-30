@@ -29,9 +29,11 @@ jobs:
         poetry config virtualenvs.create false
         poetry update
     - name: Launch docker
+      run: |
         docker-compose up database_local &
         docker ps -a
     - name: Flask upgrade
+      run: |
         flask db upgrade
     - name: Lint with flake8
       run: |
