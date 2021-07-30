@@ -28,7 +28,7 @@ jobs:
         pip install docker-compose
         poetry config virtualenvs.create false
         poetry update
-        docker-compose up database_local
+        docker-compose up database_local &
         #flask db upgrade
     - name: Lint with flake8
       run: |
