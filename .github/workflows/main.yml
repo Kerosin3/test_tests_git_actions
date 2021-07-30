@@ -64,6 +64,62 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  launch_all_arch:
+  
+    runs-on: archlinux-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ 3.9 ]
+    services:
+      postgres_db:
+        image: postgres:12
+        env:
+          POSTGRES_DB: "STOCKS_DB"
+          POSTGRES_USER: "USER"
+          POSTGRES_PASSWORD: "PASSWORD"
+        volumes:
+          - /db_data/pg-data:/var/lib/postgresql/data
+        ports: ['5432:5432']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          cd web_app
+          python -m pip install flake8 pytest poetry
+          pip install docker-compose
+          poetry config virtualenvs.create false
+          poetry update
+      - name: Flask upgrade
+        run: |
+          cd web_app
+          flask db upgrade
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
+        run: |
+          cd web_app
+          pytest -s -vv -rsx
+      - name: run coverage
+        run: |
+          cd web_app
+          coverage run --source web_app/views,web_app/models -m pytest
+      - name: run Coveralls
+        run: |
+          cd web_app
+          coveralls --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy:
     needs: launch_all
     runs-on: ubuntu-latest
