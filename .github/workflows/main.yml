@@ -30,7 +30,7 @@ jobs:
         poetry update
     - name: Launch docker
       run: |
-        docker-compose up database_local &
+        docker-compose up -d database_local 
         docker ps -a
     - name: Flask upgrade
       run: |
