@@ -8,11 +8,13 @@ on:
 
 jobs:
 
-  launch_postgres:
+  launch_postgres+run_app:
   
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      matrix:
+        python-version: [ 3.9 ]
     services:
       postgres_db:
         image: postgres:12
@@ -25,13 +27,13 @@ jobs:
         ports: ['5432:5432']
 
 
-  run-dull-tests:
-    needs: launch_postgres
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ 3.9 ]
+ # run-dull-tests:
+ #   needs: launch_postgres
+  #  runs-on: ubuntu-latest
+  #  strategy:
+ #     fail-fast: false
+  #    matrix:
+  #      python-version: [ 3.9 ]
 
     steps:
       - uses: actions/checkout@v2
