@@ -23,7 +23,7 @@ jobs:
           POSTGRES_USER: "USER"
           POSTGRES_PASSWORD: "PASSWORD"
         volumes:
-          - ./db_data/pg-data:/var/lib/postgresql/data
+          - /db_data/pg-data:/var/lib/postgresql/data
         ports: ['5432:5432']
 
     steps:
